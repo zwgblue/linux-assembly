@@ -4,5 +4,5 @@
 
 _start:
     movl $1, %eax
-    movl $0, %ebx // 返回值
+    movl $0, %ebx # 返回值
     int $0x80
