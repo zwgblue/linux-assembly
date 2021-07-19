@@ -9,7 +9,7 @@
     .type write_record, @function
 write_record:
     pushl %ebp
-    movb %esp, %ebp
+    movl %esp, %ebp
 
     pushl %ebx
     movl $SYS_WRITE, %eax
