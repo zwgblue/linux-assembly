@@ -1,0 +1,1 @@
+sudo apt-get install lib32z1 lib32ncurses5 libbz2-1.0:i386 lib32stdc++6
