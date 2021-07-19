@@ -3,6 +3,7 @@
 
 # Unignore 
 !.gitignore
+!makefile
 
 # Unignore all with extensions
 !*.s
