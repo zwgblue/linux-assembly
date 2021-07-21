@@ -9,7 +9,7 @@
     .type read_record, @function
 read_record:
     pushl %ebp
-    movb %esp, %ebp
+    movl %esp, %ebp
 
     pushl %ebx
     movl ST_FILEDES(%ebp), %ebx
