@@ -1,23 +1,25 @@
-    .include "linux.s"
+.include "../common/linux_amd64.s" // Use common amd64 definitions
     .globl write_newline
     .type write_newline, @function
+
     .section .data
 newline:
     .ascii "\n"
 
     .section .text
-    .equ ST_FILEDES, 8
+    # Argument on stack: file descriptor at 16(%rbp)
+    .equ ST_FILEDES_ARG, 16
 
 write_newline:
-    pushl %ebp
-    movl %esp, %ebp
+    pushq %rbp
+    movq %rsp, %rbp
 
-    movl $SYS_WRITE, %eax
-    movl ST_FILEDES(%ebp), %ebx
-    movl $newline, %ecx
-    movl $1, %edx
-    int $LINUX_SYSCALL
+    movq $SYS_WRITE, %rax
+    movq ST_FILEDES_ARG(%rbp), %rdi   # File descriptor
+    movq $newline, %rsi               # Address of newline string
+    movq $1, %rdx                     # Length of newline string (1 byte)
+    syscall
 
-    movl %ebp, %esp
-    popl %ebp
+    movq %rbp, %rsp
+    popq %rbp
     ret
