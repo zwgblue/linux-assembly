@@ -1,26 +1,26 @@
+.include "../common/linux_amd64.s" # Assuming common is at root
     .include "record-def.s"
-    .include "linux.s"
 
-    .equ ST_WRITE_BUFFER, 8
-    .equ ST_FILEDES, 12
+    .equ ST_FILEDES_ARG, 16        # Argument: file descriptor
+    .equ ST_WRITE_BUFFER_ARG, 24   # Argument: buffer address
 
     .section .text
     .globl write_record
     .type write_record, @function
 write_record:
-    pushl %ebp
-    movl %esp, %ebp
+    pushq %rbp
+    movq %rsp, %rbp
 
-    pushl %ebx
-    movl $SYS_WRITE, %eax
-    movl ST_FILEDES(%ebp), %ebx
-    movl ST_WRITE_BUFFER(%ebp), %ecx
-    movl $RECORD_SIZE, %edx
-    int $LINUX_SYSCALL
+    # Callee-saved registers typically pushed here if used, e.g. %rbx
+    # pushq %rbx 
 
-    # 返回值
-    popl %ebx
+    movq $SYS_WRITE, %rax
+    movq ST_FILEDES_ARG(%rbp), %rdi      # %rdi = fd
+    movq ST_WRITE_BUFFER_ARG(%rbp), %rsi # %rsi = buffer address
+    movq $RECORD_SIZE, %rdx             # %rdx = count (RECORD_SIZE)
+    syscall                             # %rax returns bytes written or error
 
-    movl %ebp, %esp
-    popl %ebp
+    # popq %rbx
+    movq %rbp, %rsp
+    popq %rbp
     ret

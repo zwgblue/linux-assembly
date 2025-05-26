@@ -1,4 +1,6 @@
-as --32 write-records.s -o write-records.o
-as --32 write-record.s -o write-record.o
-
-ld -m elf_i386 write-record.o write-records.o -o write-records
+#!/bin/bash
+as write-records.s -o write-records.o
+as write-record.s -o write-record.o
+ld write-records.o write-record.o -o write-records
+./write-records
+echo "write-records_exit_status=$?"

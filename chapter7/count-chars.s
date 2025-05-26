@@ -1,26 +1,27 @@
-    .type count_chars, @function
+.type count_chars, @function
     .globl count_chars
 
-    .equ ST_STRING_START_ADDRESS, 8
+    # Argument on stack: string start address at 16(%rbp)
+    .equ ST_STRING_START_ADDRESS_ARG, 16
 count_chars:
-    pushl %ebp
-    movl %esp, %ebp
+    pushq %rbp
+    movq %rsp, %rbp
 
-    # 计算器从0开始
-    movl $0, %ecx
-    movl ST_STRING_START_ADDRESS(%ebp), %edx
+    movq $0, %rcx                         # Counter starts at 0
+    movq ST_STRING_START_ADDRESS_ARG(%rbp), %rdx # Get string address
 
 count_loop_begin:
-    # 获取当前字符
-    movb (%edx), %al
-    cmpb $0, %al
+    movb (%rdx), %al                      # Get current character
+    cmpb $0, %al                          # Check for null terminator
     je count_loop_end
 
-    incl %ecx
-    incl %edx
+    incq %rcx                             # Increment count
+    incq %rdx                             # Move to next character
     jmp count_loop_begin
 
 count_loop_end:
-    movl %ecx, %eax
-    popl %ebp
+    movq %rcx, %rax                       # Return count in %rax
+    
+    movq %rbp, %rsp
+    popq %rbp
     ret
